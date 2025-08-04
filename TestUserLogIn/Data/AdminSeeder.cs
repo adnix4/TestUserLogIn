@@ -9,22 +9,30 @@ namespace TestUserLogIn.Data
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            string adminRole = "Admin";
-            string memberRole = "Member";
-            string adminEmail = "fshromen@yahoo.com";
-            string adminPassword = "P@assword1!#";
+            string[] roles = { "Admin", "Staff", "VolunteerOrganizer", "RegisteredUser" };
+            //string memberRole = "Member";
+            string adminEmail = "admin@yahoo.com";
+            string adminPassword = "P@ssword1!#";
+            string staffEmail = "staff@yahoo.com";
+            string password = "P@ssword2!#";
+            string volunteerOrganizerEmail = "vol@yahoo.com";
+            string registeredUserEmail = "";
 
             // Create Member role if it doesn't exist
-            if (!await roleManager.RoleExistsAsync(memberRole))
+            //if (!await roleManager.RoleExistsAsync(memberRole))
+            //{
+            //    await roleManager.CreateAsync(new IdentityRole(memberRole));
+            //}
+
+            // Create role if it doesn't exist
+            foreach (var role in roles)
             {
-                await roleManager.CreateAsync(new IdentityRole(memberRole));
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
             }
 
-            // Create Admin role if it doesn't exist
-            if (!await roleManager.RoleExistsAsync(adminRole))
-            {
-                await roleManager.CreateAsync(new IdentityRole(adminRole));
-            }
 
             // Create admin user if it doesn't exist
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
@@ -42,11 +50,45 @@ namespace TestUserLogIn.Data
             }
 
             // Assign user to Admin role
-            if (!await userManager.IsInRoleAsync(adminUser, adminRole))
+            if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
             {
-                await userManager.AddToRoleAsync(adminUser, adminRole);
+                await userManager.AddToRoleAsync(adminUser, "Admin");
             }
-        
+            // Create staff user if it doesn't exist
+            var staffUser = await userManager.FindByEmailAsync(staffEmail);
+            if (staffUser == null)
+            {
+                staffUser = new ApplicationUser { UserName = staffEmail, Email = staffEmail, EmailConfirmed = true };
+                var result = await userManager.CreateAsync(staffUser, password);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                    throw new Exception("Staff user creation failed: " + errors);
+                }
+            }
+            // Assign user to Staff role
+            if (!await userManager.IsInRoleAsync(staffUser, "Staff"))
+            {
+                await userManager.AddToRoleAsync(staffUser, "Staff");
+            }
+            // Create volunteer organizer user if it doesn't exist
+            var volunteerOrganizerUser = await userManager.FindByEmailAsync(volunteerOrganizerEmail);
+            if (volunteerOrganizerUser == null)
+            {
+                volunteerOrganizerUser = new ApplicationUser { UserName = volunteerOrganizerEmail, Email = volunteerOrganizerEmail, EmailConfirmed = true };
+                var result = await userManager.CreateAsync(volunteerOrganizerUser, password);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                    throw new Exception("Volunteer Organizer user creation failed: " + errors);
+                }
+            }
+            // Assign user to VolunteerOrganizer role
+            if (!await userManager.IsInRoleAsync(volunteerOrganizerUser, "VolunteerOrganizer"))
+            {
+                await userManager.AddToRoleAsync(volunteerOrganizerUser, "VolunteerOrganizer");
+            }
+
         }
     }
 }
