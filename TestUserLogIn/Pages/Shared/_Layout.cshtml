@@ -31,16 +31,32 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Admin">Admin</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/MemberInfo">MemberInfo</a>
-                            </li>
-						}
-                        @if (User.IsInRole("RefisteredUser"))
-                        {
+								<a class="nav-link text-dark" asp-area="" asp-page="/Admin/UserRoles">User Roles</a>
+							</li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/MemberInfo">MemberInfo</a>
                             </li>
 						}
 
+                        @if (User.IsInRole("Staff"))                        
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MemberInfo">MemberInfo</a>
+                            </li>
+                        }
+                        
+                        @if (User.IsInRole("VolunteerOrganizer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MemberInfo">MemberInfo</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("RegisteredUser"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MemberInfo">MemberInfo</a>
+                            </li>
+						}                       
                         
                     </ul>
                     <partial name="_LoginPartial" />

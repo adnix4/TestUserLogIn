@@ -1,0 +1,36 @@
+﻿@page
+@model TestUserLogIn.Pages.Admin.UserRolesModel
+@{
+	ViewData["Title"] = "User Roles";
+}
+
+<h2>Member Role Management</h2>
+
+<table class="table-bordered">
+	<thead>
+		<tr>
+			<th>Email</th>
+			<th>Roles</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var user in Model.UsersWithRoles)
+		{
+			<tr>
+				<td>@user.Email</td>
+				<td>
+					<ul>
+						@foreach (var role in user.Roles)
+						{
+							<li>@role</li>
+						}
+					</ul>
+				</td>
+				<td>
+					<a asp-page="/Admin/EditUserRoles" asp-route-id="@user.UserId">Edit Roles</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

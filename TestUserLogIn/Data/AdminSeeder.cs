@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace TestUserLogIn.Data
 {
@@ -15,8 +16,7 @@ namespace TestUserLogIn.Data
             string adminPassword = "P@ssword1!#";
             string staffEmail = "staff@yahoo.com";
             string password = "P@ssword2!#";
-            string volunteerOrganizerEmail = "vol@yahoo.com";
-            string registeredUserEmail = "";
+            string volunteerOrganizerEmail = "vol@yahoo.com";            
 
             // Create Member role if it doesn't exist
             //if (!await roleManager.RoleExistsAsync(memberRole))
@@ -87,6 +87,18 @@ namespace TestUserLogIn.Data
             if (!await userManager.IsInRoleAsync(volunteerOrganizerUser, "VolunteerOrganizer"))
             {
                 await userManager.AddToRoleAsync(volunteerOrganizerUser, "VolunteerOrganizer");
+            }
+            // Assign any unassigned user to RegisteredUser role
+            var users = userManager.Users.ToList();
+
+            foreach (var user in users)
+            {
+                var assignedRoles = await userManager.GetRolesAsync(user);
+
+                if (!assignedRoles.Contains("RegisteredUser") && !assignedRoles.Contains("Admin") && !assignedRoles.Contains("Staff") && !assignedRoles.Contains("VolunteerOrganizer"))
+                {
+                    await userManager.AddToRoleAsync(user, "RegisteredUser");
+                }
             }
 
         }
