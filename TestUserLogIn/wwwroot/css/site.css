@@ -1,7 +1,10 @@
 html {
   font-size: 14px;
 }
-
+nav {
+    background-color: #076b15;
+    color: white;
+}
 @media (min-width: 768px) {
   html {
     font-size: 16px;
