@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using TestUserLogIn.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace TestUserLogIn.Data
@@ -8,6 +9,56 @@ namespace TestUserLogIn.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
+        }
+        public DbSet<MemberInfo> MemberInfos { get; set; }
+        public DbSet<InterestsAreas> InterestsAreas { get; set; }
+        public DbSet<InvolvementAreas> InvolvementAreas { get; set; }
+        public DbSet<ServiceRoles> ServiceRoles { get; set; }
+        public DbSet<MemberInterest> MemberInterests { get; set; }
+        public DbSet<MemberInvolvement> MemberInvolvements { get; set; }
+        public DbSet<MemberServiceRole> MemberServiceRoles { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            // Configure composite primary key for MemberInterest
+            modelBuilder.Entity<MemberInterest>()
+                .HasKey(mi => new { mi.MemberID, mi.InterestAreaID });
+            // Configure relationships
+            modelBuilder.Entity<MemberInterest>()
+                .HasOne(mi => mi.Member)
+                .WithMany(m => m.MemberInterests)
+                .HasForeignKey(mi => mi.MemberID);
+            modelBuilder.Entity<MemberInterest>()
+                .HasOne(mi => mi.InterestArea)
+                .WithMany(ia => ia.MemberInterests)
+                .HasForeignKey(mi => mi.InterestAreaID);
+
+            // Configure composite primary key for MemberInvolvement
+            modelBuilder.Entity<MemberInvolvement>()
+                .HasKey(mi => new { mi.MemberID, mi.InvolvementAreaID });
+            // Configure relationships
+            modelBuilder.Entity<MemberInvolvement>()
+                .HasOne(mi => mi.Member)
+                .WithMany(m => m.MemberInvolvements)
+                .HasForeignKey(mi => mi.MemberID);
+            modelBuilder.Entity<MemberInvolvement>()
+                .HasOne(mi => mi.InvolvementArea)
+                .WithMany(ia => ia.MemberInvolvements)
+                .HasForeignKey(mi => mi.InvolvementAreaID);
+
+            // Configure composite primary key for MemberServiceRole
+            modelBuilder.Entity<MemberServiceRole>()
+                .HasKey(msr => new { msr.MemberID, msr.ServiceRoleID });
+            // Configure relationships
+            modelBuilder.Entity<MemberServiceRole>()
+                .HasOne(msr => msr.Member)
+                .WithMany(m => m.MemberServiceRoles)
+                .HasForeignKey(msr => msr.MemberID);
+            modelBuilder.Entity<MemberServiceRole>()
+                .HasOne(msr => msr.ServiceRole)
+                .WithMany(sr => sr.MemberServiceRoles)
+                .HasForeignKey(msr => msr.ServiceRoleID);
         }
     }
 }

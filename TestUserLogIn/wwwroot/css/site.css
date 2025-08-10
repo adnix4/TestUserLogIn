@@ -5,6 +5,24 @@ nav {
     background-color: #808080;
     color: white;
 }
+#introBlock {
+    background-color: #808080;
+    color: white;
+    font-weight: 600
+}
+#introBlock h4 {
+    color: black;
+    font-weight: bold;
+    padding: 15px
+
+}
+.citedVerse {
+    margin: 15px;
+    font-style: italic;
+    font-size: .9em;
+    text-align: right;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
