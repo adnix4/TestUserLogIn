@@ -21,6 +21,12 @@ namespace TestUserLogIn.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // Configure a one-to-one relationship between ApplicationUser and MemberInfo
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(a => a.Member)
+                .WithOne(m => m.ApplicationUser)
+                .HasForeignKey<ApplicationUser>(a => a.MemberID);
+
             // Configure composite primary key for MemberInterest
             modelBuilder.Entity<MemberInterest>()
                 .HasKey(mi => new { mi.MemberID, mi.InterestAreaID });

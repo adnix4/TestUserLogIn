@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using TestUserLogIn.Data;
 
 namespace TestUserLogIn.Models
 {
@@ -41,6 +42,7 @@ namespace TestUserLogIn.Models
 
         public DateTime? UpdatedDate { get; set; }
 
+        public required ApplicationUser ApplicationUser { get; set; }
         public ICollection<MemberInterest>? MemberInterests { get; set; }
         public ICollection<MemberInvolvement>? MemberInvolvements { get; set; }
         public ICollection<MemberServiceRole>? MemberServiceRoles { get; set; }
