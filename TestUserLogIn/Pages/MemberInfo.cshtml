@@ -4,18 +4,34 @@
 	ViewData["Title"] = "Member Information";
 }
 
-<div class="text-center">
-	<h1 class="display-4">Member Information</h1>
+<div>	
 	 @* <p>Welcome, @Model.UserName!</p>
 	<p>Your email is: @Model.Email</p>
 	<p>Your role is: @Model.Role</p>
 	<p>Member since: @Model.MemberSince.ToShortDateString()</p> *@ 
-	<h3>Welcome, @Model.UserName!</h3>
-	<p>This our Members Information Page our records show that you have the following roles</p>
-	<ul class="w-auto">
-		@foreach (var role in Model.Roles)
-		{
-			<li class="alert-info">@role</li>
-		}	
-	</ul>
+	<h2>Welcome, @Model.UserName!</h2>
+	<p>Our records show that you have the following roles</p>
+	<table class="table-bordered">
+		<thead>
+			<tr>
+				<th>Role</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr>
+				<td>
+					<ul>
+					@foreach (var role in Model.Roles)
+					{
+						<li>@role</li>
+					}
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+		
 	<p>Thank you for being a member!</p>

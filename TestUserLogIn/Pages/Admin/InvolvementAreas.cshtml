@@ -1,4 +1,13 @@
 ﻿@page
 @model TestUserLogIn.Pages.Admin.InvolvementAreasModel
 @{
+	ViewData["Title"] = "Involvement Areas";
 }
+<h2>Involvement Areas</h2>
+<form method="post" class="align-content-md-stretch">
+	<div class="form-group">
+		<label for="newArea">Add New Involvement Area</label>
+		<input type="text" id="newArea" name="newArea" class="form-control" required />
+	</div>
+	<button type="submit" class="btn btn-primary">Add Area</button>
+</form>
