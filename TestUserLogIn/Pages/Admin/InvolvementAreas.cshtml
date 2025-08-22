@@ -4,6 +4,7 @@
 	ViewData["Title"] = "Involvement Areas";
 }
 <h2>Involvement Areas</h2>
+
 <form method="post" class="align-content-md-stretch">
 	<div class="form-group">
 		<label for="newArea">Add New Involvement Area</label>
@@ -11,3 +12,28 @@
 	</div>
 	<button type="submit" class="btn btn-primary">Add Area</button>
 </form>
+
+<hr />
+
+<h3>Current Involvement Areas</h3>
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Involvement Area</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var area in Model.InvolvementAreasList)
+		{
+			<tr>
+				<td>@area.AreaOfInvolvement</td>
+				<td>
+					<form method="post" asp-page-handler="Delete" asp-route-id="@area.AreaOfInvolvement" class="d-inline">
+						<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
