@@ -7,9 +7,17 @@
 
 <form method="post" class="align-content-md-stretch">
 	<div class="form-group">
-		<label for="newArea">Add New Involvement Area</label>
-		<input type="text" id="newArea" name="newArea" class="form-control" required />
+		<label asp-for="NewInvolvementArea.AreaOfInvolvement">Add New Involvement Area</label>
+		<input asp-for="NewInvolvementArea.AreaOfInvolvement" class="form-control" required />
+		<span asp-validation-for="NewInvolvementArea.AreaOfInvolvement" class="text-danger"></span>
 	</div>
+
+	<div class="form-group">
+		<label asp-for="NewInvolvementArea.Description">Description</label>
+		<input asp-for="NewInvolvementArea.Description" class="form-control" />
+		<span asp-validation-for="NewInvolvementArea.Description" class="text-danger"></span>
+	</div>
+
 	<button type="submit" class="btn btn-primary">Add Area</button>
 </form>
 
@@ -21,19 +29,56 @@
 	<thead>
 		<tr>
 			<th>Involvement Area</th>
+			<th>Description</th>
+			<th>Actions</th>
 			
 		</tr>
 	</thead>
 	<tbody>
 		@foreach (var area in Model.InvolvementAreasList)
 		{
+			if(Model.EditInvolvementArea != null && Model.EditInvolvementArea.InvolvementAreaID == area.InvolvementAreaID)
+			{
+				<tr>
+					<td>
+						<form method="post" asp-page-handler="SaveEdit">
+							<input type="hidden" asp-for="EditInvolvementArea.InvolvementAreaID" />
+
+					
+						<input asp-for="EditInvolvementArea.AreaOfInvolvement" class="form-control" required />
+						<span asp-validation-for="EditInvolvementArea.AreaOfInvolvement" class="text-danger"></span>
+					
+						<input asp-for="EditInvolvementArea.Description" class="form-control" />
+						<span asp-validation-for="EditInvolvementArea.Description" class="text-danger"></span>
+					
+						<button type="submit" class="btn btn-success btn-sm">Save</button>
+						</form>
+					</td>
+					<td>
+						<form method="post" asp-page-handler="CancelEdit" class="d-inline">
+							<button type="submit" class="btn btn-secondary btn-sm">Cancel</button>
+						</form>
+					</td>
+				</tr>		
+			}
+			else{
 			<tr>
 				<td>@area.AreaOfInvolvement</td>
+				<td>@area.Description</td>
 				<td>
-					<form method="post" asp-page-handler="Delete" asp-route-id="@area.AreaOfInvolvement" class="d-inline">
+					<form method="post" asp-page-handler="Edit" asp-route-id="@area.InvolvementAreaID" class="d-inline">
+						<button type="submit" class="btn btn-danger btn-sm">Edit</button>
+					</form>
+
+					<form method="post" asp-page-handler="Delete" asp-route-id="@area.InvolvementAreaID" class="d-inline">
 						<button type="submit" class="btn btn-danger btn-sm">Delete</button>
 					</form>
 				</td>
 			</tr>
+			}
 		}
 	</tbody>
+</table>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
