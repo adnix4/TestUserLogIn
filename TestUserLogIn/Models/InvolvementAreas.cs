@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace TestUserLogIn.Models
 {
@@ -7,13 +8,16 @@ namespace TestUserLogIn.Models
     {
         [Key]
         public int InvolvementAreaID { get; set; }
+
         [Required(ErrorMessage = "Area of Involvement is required")]
         [Display(Name = "Area of Involvement")]
-        public required string AreaOfInvolvement { get; set; }
+        public string AreaOfInvolvement { get; set; }
+
         [Display(Name = "Description")]
         public string? Description { get; set; }
-        public bool IsActive { get; set; } = true;
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+        public bool IsActive { get; set; }
+        public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public ICollection<MemberInvolvement>? MemberInvolvements { get; set; }
     }
