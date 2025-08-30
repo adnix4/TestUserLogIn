@@ -33,45 +33,25 @@ namespace TestUserLogIn.Pages.Admin
 
         public void OnGet()
         {
-            LoadActiveAreas();
+            LoadAreas();
         }
 
         // Add new involvement area
         public IActionResult OnPost()
         {
-            Console.WriteLine($"Form keys received: {string.Join(", ", Request.Form.Keys)}");
-            if (NewInvolvementArea?.AreaOfInvolvement != null)
-            {
-                ModelState.Remove("AreaOfInvolvement");
-                ModelState.SetModelValue("NewInvolvementArea.AreaOfInvolvement",
-                    new ValueProviderResult(
-                    NewInvolvementArea.AreaOfInvolvement));
-            }
+            FixModelStateBinding("NewInvolvementArea", "AreaOfInvolvement", NewInvolvementArea?.AreaOfInvolvement);
 
-            if (!ModelState.IsValid)
-            {
-                Console.WriteLine($"ModelState is invalid.{ModelState}");
-                Console.WriteLine($"NewInvolvementArea.AreaOfInvolvement: {NewInvolvementArea?.AreaOfInvolvement}");
-                Console.WriteLine($"NewInvolvementArea.Description: {NewInvolvementArea?.Description}");
-                foreach (var modelState in ModelState)
-                {
-                    Console.WriteLine($"Key: {modelState.Key}, IsValid: {modelState.Value.ValidationState}");
-                    foreach (var error in modelState.Value.Errors)
-                    {
-                        Console.WriteLine($"Error: {error.ErrorMessage}");
-                    }
-                }
+            ModelState.Remove("EditInvolvementArea.AreaOfInvolvement");
 
-                LoadActiveAreas();
+
+            if (!ModelStateCheck("OnPost NewInvolvementArea"))
                 return Page();
-            }
 
             try
             {
-                // Case-insensitive lookup
-                var areaName = NewInvolvementArea.AreaOfInvolvement;
                 var existing = _context.InvolvementAreas
-                    .FirstOrDefault(ia => EF.Functions.Like(ia.AreaOfInvolvement, areaName));
+                    .FirstOrDefault(ia => EF.Functions.Like(ia.AreaOfInvolvement, NewInvolvementArea.AreaOfInvolvement));
+
 
                 if (existing != null)
                 {
@@ -79,22 +59,21 @@ namespace TestUserLogIn.Pages.Admin
                     {
                         ModelState.AddModelError("NewInvolvementArea.AreaOfInvolvement",
                             "This involvement area already exists.");
-                        LoadActiveAreas();
+                        ModelStateCheck("OnPost Duplicate");
                         return Page();
                     }
 
                     // Reactivate inactive area
                     existing.IsActive = true;
-                    existing.Description = NewInvolvementArea.Description; // optional
+                    existing.Description = NewInvolvementArea.Description;
                     existing.UpdatedDate = DateTime.UtcNow;
-
                     _context.SaveChanges();
-                    _logger.LogInformation("Reactivated involvement area {Area}", existing.AreaOfInvolvement);
 
+                    _logger.LogInformation("Reactivated involvement area {Area}", existing.AreaOfInvolvement);
                     return RedirectToPage();
                 }
 
-                // Create new
+                // Create new area
                 NewInvolvementArea.CreatedDate = DateTime.UtcNow;
                 NewInvolvementArea.IsActive = true;
 
@@ -102,14 +81,13 @@ namespace TestUserLogIn.Pages.Admin
                 _context.SaveChanges();
 
                 _logger.LogInformation("Added new involvement area {Area}", NewInvolvementArea.AreaOfInvolvement);
-
                 return RedirectToPage();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error saving new involvement area");
                 ModelState.AddModelError(string.Empty, "Error saving the involvement area.");
-                LoadActiveAreas();
+                LoadAreas();
                 return Page();
             }
         }
@@ -117,13 +95,17 @@ namespace TestUserLogIn.Pages.Admin
         // Load edit form
         public IActionResult OnPostEdit(int id)
         {
+            ModelState.Remove("NewInvolvementArea.AreaOfInvolvement");
+            ModelState.Remove("NewInvolvementArea.Description");
+            ModelState.Remove("AreaOfInvolvement");
+
             var existingArea = _context.InvolvementAreas.Find(id);
             if (existingArea == null) return NotFound();
-
+                        
             EditInvolvementAreaId = id;
             EditInvolvementArea = existingArea;
 
-            LoadActiveAreas();
+            LoadAreas();
             return Page();
         }
 
@@ -132,11 +114,11 @@ namespace TestUserLogIn.Pages.Admin
         {
             if (EditInvolvementArea == null) return BadRequest();
 
-            if (!ModelState.IsValid)
-            {
-                LoadActiveAreas();
+            FixModelStateBinding("EditInvolvementArea", "AreaOfInvolvement", EditInvolvementArea?.AreaOfInvolvement);
+            ModelState.Remove("NewInvolvementArea.AreaOfInvolvement");
+
+            if (!ModelStateCheck("OnPostSaveEdit"))
                 return Page();
-            }
 
             var existingArea = _context.InvolvementAreas.Find(EditInvolvementArea.InvolvementAreaID);
             if (existingArea == null) return NotFound();
@@ -145,14 +127,15 @@ namespace TestUserLogIn.Pages.Admin
             var duplicate = _context.InvolvementAreas
                 .FirstOrDefault(ia =>
                     ia.InvolvementAreaID != EditInvolvementArea.InvolvementAreaID &&
-                    ia.AreaOfInvolvement.Equals(EditInvolvementArea.AreaOfInvolvement, StringComparison.OrdinalIgnoreCase) &&
+                    EF.Functions.Like(ia.AreaOfInvolvement, EditInvolvementArea.AreaOfInvolvement) &&
                     ia.IsActive);
+
 
             if (duplicate != null)
             {
                 ModelState.AddModelError("EditInvolvementArea.AreaOfInvolvement",
                     "Another active involvement area already has this name.");
-                LoadActiveAreas();
+                ModelStateCheck("Save Edit Duplicate");
                 return Page();
             }
 
@@ -161,20 +144,19 @@ namespace TestUserLogIn.Pages.Admin
             existingArea.UpdatedDate = DateTime.UtcNow;
 
             _context.SaveChanges();
-
             _logger.LogInformation("Edited involvement area {Area}", existingArea.AreaOfInvolvement);
 
             return RedirectToPage();
         }
 
-        public IActionResult OnPostCancelEdit()
-        {
-            return RedirectToPage();
-        }
+        public IActionResult OnPostCancelEdit() => RedirectToPage();
 
         // Soft delete
         public IActionResult OnPostDelete(int id)
         {
+            if (!ModelStateCheck("OnPostDelete"))
+                return Page();
+
             var involvementArea = _context.InvolvementAreas.Find(id);
             if (involvementArea != null)
             {
@@ -184,28 +166,69 @@ namespace TestUserLogIn.Pages.Admin
 
                 _logger.LogInformation("Soft deleted involvement area {Area}", involvementArea.AreaOfInvolvement);
             }
-
             return RedirectToPage();
         }
+
+        // Reactivate deleted
         public IActionResult OnPostReactivate(int id)
         {
+            if (!ModelStateCheck("OnPostReactivate"))
+                return Page();
+
             var involvementArea = _context.InvolvementAreas.Find(id);
             if (involvementArea != null && !involvementArea.IsActive)
             {
                 involvementArea.IsActive = true;
                 involvementArea.UpdatedDate = DateTime.UtcNow;
                 _context.SaveChanges();
+
+                _logger.LogInformation("Reactivated involvement area {Area}", involvementArea.AreaOfInvolvement);
             }
             return RedirectToPage();
         }
 
-        // Helper: Load only active areas
-        private void LoadActiveAreas()
+        // Helper: Load areas (with optional inactive)
+        private void LoadAreas(bool includeInactive = false)
         {
-            InvolvementAreasList = _context.InvolvementAreas
-                .Where(ia => ia.IsActive)
+            var query = _context.InvolvementAreas.AsQueryable();
+            if (!includeInactive)
+                query = query.Where(ia => ia.IsActive);
+
+            InvolvementAreasList = query
                 .OrderBy(ia => ia.AreaOfInvolvement)
                 .ToList();
+        }
+
+        // ModelState debugger
+        private bool ModelStateCheck(string contextName = "")
+        {
+            if (ModelState.IsValid) return true;
+
+            _logger.LogWarning("ModelState invalid in {Context}. Submitted values: {@Values}",
+                contextName,
+                Request.Form.ToDictionary(k => k.Key, v => v.Value.ToString()));
+
+            foreach (var entry in ModelState)
+            {
+                foreach (var error in entry.Value.Errors)
+                {
+                    _logger.LogWarning("Field {Key}: {Error}", entry.Key, error.ErrorMessage);
+                }
+            }
+
+            LoadAreas();
+            return false;
+        }
+
+        // Fix Model State binding issue
+        private void FixModelStateBinding(string propertyPrefix, string propertyName, string? value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                var key = $"{propertyPrefix}.{propertyName}";
+                ModelState.Remove(propertyName);
+                ModelState.SetModelValue(key, new ValueProviderResult(value));
+            }
         }
     }
 }
