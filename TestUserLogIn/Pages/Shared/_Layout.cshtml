@@ -30,15 +30,25 @@
                         </li> *@
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-page="/Admin">Admin</a>
+                            <li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle text-light"href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin Areas</a>
+								<ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="" asp-page="/Admin">Admin</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="" asp-page="/Admin/UserRoles">User Roles</a>
+							        </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="" asp-page="/Admin/InvolvementAreas">Involvement Areas</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="" asp-page="/Admin/InterestAreas">Interest Areas</a>
+                                    </li>
+
+                                </ul>
                             </li>
-                            <li class="nav-item">
-								<a class="nav-link text-light" asp-area="" asp-page="/Admin/UserRoles">User Roles</a>
-							</li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-page="/Admin/InvolvementAreas">Involvement Areas</a>
-                            </li>
+
 						}
 
                         @if (User.IsInRole("Staff"))                        
