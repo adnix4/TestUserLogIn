@@ -154,8 +154,12 @@ namespace TestUserLogIn.Pages.Admin
         // Soft delete
         public IActionResult OnPostDelete(int id)
         {
+            ModelState.Remove("NewInvolvementArea.AreaOfInvolvement");
+            ModelState.Remove("NewInvolvementArea.Description");
+            ModelState.Remove("AreaOfInvolvement");
             if (!ModelStateCheck("OnPostDelete"))
                 return Page();
+           
 
             var involvementArea = _context.InvolvementAreas.Find(id);
             if (involvementArea != null)
@@ -172,6 +176,9 @@ namespace TestUserLogIn.Pages.Admin
         // Reactivate deleted
         public IActionResult OnPostReactivate(int id)
         {
+            ModelState.Remove("AreaOfInvolvement");
+            ModelState.Remove("NewInvolvementArea.AreaOfInvolvement");
+            ModelState.Remove("NewInvolvementArea.Description");
             if (!ModelStateCheck("OnPostReactivate"))
                 return Page();
 
@@ -188,13 +195,10 @@ namespace TestUserLogIn.Pages.Admin
         }
 
         // Helper: Load areas (with optional inactive)
-        private void LoadAreas(bool includeInactive = false)
+        private void LoadAreas()
         {
-            var query = _context.InvolvementAreas.AsQueryable();
-            if (!includeInactive)
-                query = query.Where(ia => ia.IsActive);
-
-            InvolvementAreasList = query
+           
+            InvolvementAreasList = _context.InvolvementAreas
                 .OrderBy(ia => ia.AreaOfInvolvement)
                 .ToList();
         }
