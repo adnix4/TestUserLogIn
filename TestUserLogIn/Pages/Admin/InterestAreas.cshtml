@@ -1,5 +1,114 @@
 ﻿@page
 @model TestUserLogIn.Pages.Admin.InterestAreasModel
 @{
-	
+	ViewData["Title"] = "Interest Areas";
 }
+<h2 class="mb-4">Interest Areas</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+	<div class="alert alert-danger">
+		<ul class="mb-0">
+			@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+			{
+				<li>@error.ErrorMessage</li>
+			}
+		</ul>
+	</div>
+}
+
+<!-- Add New Interest Area -->
+<div class="card shadow-sm mb-4">
+	<div class="card-body">
+		<h4 class="card-title">Add New Interest Area</h4>
+		<form method="post">
+			<div class="mb-3">
+				<label asp-for="NewInterestArea.AreaOfInterest" class="form-label"></label>
+				<input asp-for="NewInterestArea.AreaOfInterest" class="form-control" />
+				<span asp-validation-for="NewInterestArea.AreaOfInterest" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="NewInterestArea.Description" class="form-label"></label>
+				<textarea asp-for="NewInterestArea.Description" class="form-control" rows="2"></textarea>
+				<span asp-validation-for="NewInterestArea.Description" class="text-danger"></span>
+			</div>
+			<button type="submit" class="btn btn-primary">
+				<i class="bi bi-plus-circle"></i> Add Area
+			</button>
+		</form>
+	</div>
+</div>
+
+<!-- Tabs for Active / Inactive -->
+<ul class="nav nav-tabs mb-3" id="areaTabs" role="tablist">
+	<li class="nav-item" role="presentation">
+		<button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab">
+			Active Areas
+		</button>
+	</li>
+	<li class="nav-item" role="presentation">
+		<button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive" type="button" role="tab">
+			Inactive Areas
+		</button>
+	</li>
+</ul>
+
+<div class="tab-content">
+	<!-- Active Areas -->
+	<div class="tab-pane fade show active" id="active" role="tabpanel">
+		@if (Model.ActiveInterestAreas.Any())
+		{
+			<table class="table table-bordered table-hover">
+				<thead class="table-light">
+					<tr>
+						<th>Area of Interest</th>
+						<th>Description</th>
+						<th style="width: 150px;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var area in Model.ActiveInterestAreas)
+					{
+						<tr>
+							<td>@area.AreaOfInterest</td>
+							<td>@area.Description</td>
+							<td>
+								<a asp-page="/Admin/EditInterestArea" asp-route-id="@area.Id" class="btn btn-sm btn-primary me-2">
+									<i class="bi bi-pencil-square"></i> Edit
+								</a>
+								<form method="post" asp-page-handler="ToggleStatus" asp-route-id="@area.Id" class="d-inline">
+									<button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Are you sure you want to deactivate this area?');">
+										<i class="bi bi-x-circle"></i> Deactivate
+									</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+		else
+		{
+			<p>No active interest areas found.</p>
+		}
+	</div>
+	<!-- Inactive Areas -->
+	<div class="tab-pane fade" id="inactive" role="tabpanel">
+		@if (Model.InactiveInterestAreas.Any())
+		{
+			<table class="table table-bordered table-hover">
+				<thead class="table-light">
+					<tr>
+						<th>Area of Interest</th>
+						<th>Description</th>
+						<th style="width: 150px;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var area in Model.InactiveInterestAreas)
+					{
+						<tr>
+							<td>@area.AreaOfInterest</td>
+							<td>@area.Description</td>
+							<td>
+								<a asp-page="/Admin/EditInterestArea" asp-route-id

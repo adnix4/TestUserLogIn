@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace TestUserLogIn.Models
 {
@@ -7,9 +8,10 @@ namespace TestUserLogIn.Models
     {
         [Key]
         public int InterestAreaID { get; set; }
+        
         [Required(ErrorMessage = "Interest Area is required")]
         [Display(Name = "Interest Area")]
-        public required string InterestArea { get; set; }
+        public string InterestArea { get; set; }
         [Display(Name = "Description")]
         public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
