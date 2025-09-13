@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TestUserLogIn.Models
 {
-    public class InterestsAreas
+    public class InterestAreas
     {
         [Key]
         public int InterestAreaID { get; set; }
@@ -12,8 +12,10 @@ namespace TestUserLogIn.Models
         [Required(ErrorMessage = "Interest Area is required")]
         [Display(Name = "Interest Area")]
         public string InterestArea { get; set; }
+
         [Display(Name = "Description")]
         public string? Description { get; set; }
+
         public bool IsActive { get; set; } = true;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedDate { get; set; }

@@ -43,7 +43,6 @@ namespace TestUserLogIn.Pages.Admin
 
             ModelState.Remove("EditInvolvementArea.AreaOfInvolvement");
 
-
             if (!ModelStateCheck("OnPost NewInvolvementArea"))
                 return Page();
 
@@ -51,7 +50,6 @@ namespace TestUserLogIn.Pages.Admin
             {
                 var existing = _context.InvolvementAreas
                     .FirstOrDefault(ia => EF.Functions.Like(ia.AreaOfInvolvement, NewInvolvementArea.AreaOfInvolvement));
-
 
                 if (existing != null)
                 {
@@ -100,8 +98,13 @@ namespace TestUserLogIn.Pages.Admin
             ModelState.Remove("AreaOfInvolvement");
 
             var existingArea = _context.InvolvementAreas.Find(id);
-            if (existingArea == null) return NotFound();
-                        
+
+            if (existingArea == null)
+            {
+                _logger.LogWarning("Involvement area with ID {Id} not found for editing", id);
+                return NotFound();
+            }        
+
             EditInvolvementAreaId = id;
             EditInvolvementArea = existingArea;
 
@@ -112,8 +115,11 @@ namespace TestUserLogIn.Pages.Admin
         // Save edit
         public IActionResult OnPostSaveEdit()
         {
-            if (EditInvolvementArea == null) return BadRequest();
+            if (EditInvolvementArea == null)
+            {
 
+                return BadRequest();
+            }
             FixModelStateBinding("EditInvolvementArea", "AreaOfInvolvement", EditInvolvementArea?.AreaOfInvolvement);
             ModelState.Remove("NewInvolvementArea.AreaOfInvolvement");
 
@@ -129,7 +135,6 @@ namespace TestUserLogIn.Pages.Admin
                     ia.InvolvementAreaID != EditInvolvementArea.InvolvementAreaID &&
                     EF.Functions.Like(ia.AreaOfInvolvement, EditInvolvementArea.AreaOfInvolvement) &&
                     ia.IsActive);
-
 
             if (duplicate != null)
             {

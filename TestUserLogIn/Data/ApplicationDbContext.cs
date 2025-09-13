@@ -12,7 +12,7 @@ namespace TestUserLogIn.Data
 
         }
         public DbSet<MemberInfo> MemberInfos { get; set; }
-        public DbSet<InterestsAreas> InterestsAreas { get; set; }
+        public DbSet<InterestAreas> InterestAreas { get; set; }
         public DbSet<InvolvementAreas> InvolvementAreas { get; set; }
         public DbSet<ServiceRoles> ServiceRoles { get; set; }
         public DbSet<MemberInterest> MemberInterests { get; set; }

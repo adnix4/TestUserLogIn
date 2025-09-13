@@ -1,36 +1,46 @@
 ﻿@page
 @model TestUserLogIn.Pages.MemberInfoModel
 @{
-	ViewData["Title"] = "Member Information";
+	ViewData["Title"] = "Member Role";
+}
+@if (Model.Roles.Count > 1)
+{
+	<h2 class="mb-4">Member Roles</h2>
+}
+else
+{
+	<h2 class="mb-4">Member Role</h2>
 }
 
-<div>	
+<div class="card shadow-sm mb-4">
+	<div class="card-body">
 	 @* <p>Welcome, @Model.UserName!</p>
 	<p>Your email is: @Model.Email</p>
 	<p>Your role is: @Model.Role</p>
 	<p>Member since: @Model.MemberSince.ToShortDateString()</p> *@ 
-	<h2>Welcome, @Model.UserName!</h2>
-	<p>Our records show that you have the following roles</p>
-	<table class="table-bordered">
-		<thead>
-			<tr>
-				<th>Role</th>
-			</tr>
-		</thead>
+		<h4 class="card-title">Welcome, @Model.UserName!</h4>
+		<p>Our records show that you have the following roles</p>
+		<table class="table table-hover align-middle">
+			<thead class="table-light">
+				<tr>
+					<th>Role</th>
+				</tr>
+			</thead>
 
-		<tbody>
-			<tr>
-				<td>
-					<ul>
-					@foreach (var role in Model.Roles)
-					{
-						<li>@role</li>
-					}
-					</ul>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+			<tbody>
+				<tr>
+					<td>
+						<ul>
+						@foreach (var role in Model.Roles)
+						{
+							<li>@role</li>
+						}
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 		

@@ -1,7 +1,8 @@
 ﻿@page
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model TestUserLogIn.Pages.Admin.InterestAreasModel
 @{
-	ViewData["Title"] = "Interest Areas";
+	 ViewData ["Title"] = "Interest Areas";
 }
 <h2 class="mb-4">Interest Areas</h2>
 
@@ -23,15 +24,17 @@
 		<h4 class="card-title">Add New Interest Area</h4>
 		<form method="post">
 			<div class="mb-3">
-				<label asp-for="NewInterestArea.AreaOfInterest" class="form-label"></label>
-				<input asp-for="NewInterestArea.AreaOfInterest" class="form-control" />
-				<span asp-validation-for="NewInterestArea.AreaOfInterest" class="text-danger"></span>
+				<label asp-for="NewInterestArea.InterestArea" class="form-label"></label>
+				<input asp-for="NewInterestArea.InterestArea" class="form-control" />
+				<span asp-validation-for="NewInterestArea.InterestArea" class="text-danger"></span>
 			</div>
+
 			<div class="mb-3">
 				<label asp-for="NewInterestArea.Description" class="form-label"></label>
 				<textarea asp-for="NewInterestArea.Description" class="form-control" rows="2"></textarea>
 				<span asp-validation-for="NewInterestArea.Description" class="text-danger"></span>
 			</div>
+
 			<button type="submit" class="btn btn-primary">
 				<i class="bi bi-plus-circle"></i> Add Area
 			</button>
@@ -41,74 +44,140 @@
 
 <!-- Tabs for Active / Inactive -->
 <ul class="nav nav-tabs mb-3" id="areaTabs" role="tablist">
-	<li class="nav-item" role="presentation">
-		<button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab">
-			Active Areas
-		</button>
-	</li>
-	<li class="nav-item" role="presentation">
-		<button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive" type="button" role="tab">
-			Inactive Areas
-		</button>
-	</li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab">
+            Active Areas
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive" type="button" role="tab">
+            Inactive Areas
+        </button>
+    </li>
 </ul>
 
 <div class="tab-content">
-	<!-- Active Areas -->
-	<div class="tab-pane fade show active" id="active" role="tabpanel">
-		@if (Model.ActiveInterestAreas.Any())
-		{
-			<table class="table table-bordered table-hover">
-				<thead class="table-light">
-					<tr>
-						<th>Area of Interest</th>
-						<th>Description</th>
-						<th style="width: 150px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var area in Model.ActiveInterestAreas)
-					{
-						<tr>
-							<td>@area.AreaOfInterest</td>
-							<td>@area.Description</td>
-							<td>
-								<a asp-page="/Admin/EditInterestArea" asp-route-id="@area.Id" class="btn btn-sm btn-primary me-2">
-									<i class="bi bi-pencil-square"></i> Edit
-								</a>
-								<form method="post" asp-page-handler="ToggleStatus" asp-route-id="@area.Id" class="d-inline">
-									<button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Are you sure you want to deactivate this area?');">
-										<i class="bi bi-x-circle"></i> Deactivate
-									</button>
-								</form>
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		}
-		else
-		{
-			<p>No active interest areas found.</p>
-		}
-	</div>
-	<!-- Inactive Areas -->
-	<div class="tab-pane fade" id="inactive" role="tabpanel">
-		@if (Model.InactiveInterestAreas.Any())
-		{
-			<table class="table table-bordered table-hover">
-				<thead class="table-light">
-					<tr>
-						<th>Area of Interest</th>
-						<th>Description</th>
-						<th style="width: 150px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var area in Model.InactiveInterestAreas)
-					{
-						<tr>
-							<td>@area.AreaOfInterest</td>
-							<td>@area.Description</td>
-							<td>
-								<a asp-page="/Admin/EditInterestArea" asp-route-id
+    <!-- Active Areas -->
+    <div class="tab-pane fade show active" id="active" role="tabpanel">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 25%">Interest Area</th>
+                            <th style="width: 50%">Description</th>
+                            <th style="width: 25%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.InterestAreasList.Any(a => a.IsActive))
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">No active interest areas found.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var area in Model.InterestAreasList.Where(a => a.IsActive))
+                            {
+                                if (Model.EditInterestArea != null && Model.EditInterestArea.InterestAreaID == area.InterestAreaID)
+                                {
+                                    <!-- Inline Edit Row -->
+                                    <form method="post" asp-page-handler="SaveEdit">
+                                    <tr class="table-warning">
+                                        <input type="hidden" asp-for="EditInterestArea.InterestAreaID" />
+                                        <td>
+                                            <input asp-for="EditInterestArea.InterestArea" class="form-control" required />
+                                            <span asp-validation-for="EditInterestArea.InterestArea" class="text-danger"></span>
+                                        </td>
+                                        <td>
+                                            <textarea asp-for="EditInterestArea.Description" class="form-control" rows="2"></textarea>
+                                            <span asp-validation-for="EditInterestArea.Description" class="text-danger"></span>
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="submit" class="btn btn-success btn-sm me-2">
+                                                <i class="bi bi-check-circle"></i> Save
+                                            </button>
+                                            <form method="post" asp-page-handler="CancelEdit" class="d-inline">
+                                                <button type="submit" class="btn btn-secondary btn-sm">
+                                                    <i class="bi bi-x-circle"></i> Cancel
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <!-- Normal Row -->
+                                    <tr>
+                                        <td>@area.InterestArea</td>
+                                        <td>@area.Description</td>
+                                        <td class="text-center">
+                                            <form method="post" asp-page-handler="Edit" asp-route-id="@area.InterestAreaID" class="d-inline">
+                                                <button type="submit" class="btn btn-warning btn-sm me-1">
+                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                </button>
+                                            </form>
+                                            <form method="post" asp-page-handler="Deactivate" asp-route-id="@area.InterestAreaID" class="d-inline">
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inactive Areas -->
+    <div class="tab-pane fade" id="inactive" role="tabpanel">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 25%">Interest Area</th>
+                            <th style="width: 50%">Description</th>
+                            <th style="width: 25%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.InterestAreasList.Any(a => !a.IsActive))
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">No inactive interest areas found.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var area in Model.InterestAreasList.Where(a => !a.IsActive))
+                            {
+                                <tr class="table-light">
+                                    <td>@area.InterestArea</td>
+                                    <td>@area.Description</td>
+                                    <td class="text-center">
+                                        <form method="post" asp-page-handler="Reactivate" asp-route-id="@area.InterestAreaID" class="d-inline">
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="bi bi-arrow-counterclockwise"></i> Reactivate
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
