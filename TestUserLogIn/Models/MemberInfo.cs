@@ -10,11 +10,11 @@ namespace TestUserLogIn.Models
         public int MemberID { get; set; }
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "First Name is required")]
-        public required string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         [Display(Name = "Last Name")]
         [Required(ErrorMessage = "Last Name is required")]
-        public required string LastName { get; set; }
+        public string? LastName { get; set; }
 
         public string? Address { get; set; }
 
@@ -24,11 +24,13 @@ namespace TestUserLogIn.Models
 
         public string? Zip { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required")]
-        public required string PhoneNumber { get; set; }
+        public string? CellPhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
-        public required string Email { get; set; }
+        public string? HomePhoneNumber { get; set; }
+
+        public string? WorkPhoneNumber { get; set; }
+
+        public string? Email { get; set; }
 
         public DateTime? BirthDate { get; set; }
 
@@ -42,7 +44,9 @@ namespace TestUserLogIn.Models
 
         public DateTime? UpdatedDate { get; set; }
 
-        public required ApplicationUser ApplicationUser { get; set; }
+        public string ApplicationUserID { get; set; } = string.Empty;
+
+        public ApplicationUser? ApplicationUser { get; set; }
         public ICollection<MemberInterest>? MemberInterests { get; set; }
         public ICollection<MemberInvolvement>? MemberInvolvements { get; set; }
         public ICollection<MemberServiceRole>? MemberServiceRoles { get; set; }

@@ -1,4 +1,107 @@
 ﻿@page
-@model TestUserLogIn.Pages.Members.MemberInfoModel
+@model TestUserLogIn.Pages.MemberInfoModel
 @{
+    ViewData["Title"] = "My Information";
 }
+
+<h2 class="mb-4">Welcome, @User.Identity?.Name!</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post">
+            <h4 class="card-title mb-3">Your Profile</h4>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="MemberDetails.FirstName" class="form-label"></label>
+                    <input asp-for="MemberDetails.FirstName" class="form-control" />
+                    <span asp-validation-for="MemberDetails.FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="MemberDetails.LastName" class="form-label"></label>
+                    <input asp-for="MemberDetails.LastName" class="form-control" />
+                    <span asp-validation-for="MemberDetails.LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MemberDetails.Email" class="form-label"></label>
+                <input asp-for="MemberDetails.Email" class="form-control" />
+                <span asp-validation-for="MemberDetails.Email" class="text-danger"></span>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="MemberDetails.CellPhoneNumber" class="form-label"></label>
+                    <input asp-for="MemberDetails.CellPhoneNumber" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="MemberDetails.HomePhoneNumber" class="form-label"></label>
+                    <input asp-for="MemberDetails.HomePhoneNumber" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MemberDetails.Address" class="form-label"></label>
+                <input asp-for="MemberDetails.Address" class="form-control" />
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label asp-for="MemberDetails.City" class="form-label"></label>
+                    <input asp-for="MemberDetails.City" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="MemberDetails.State" class="form-label"></label>
+                    <input asp-for="MemberDetails.State" class="form-control" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="MemberDetails.Zip" class="form-label"></label>
+                    <input asp-for="MemberDetails.Zip" class="form-control" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="MemberDetails.BirthDate" class="form-label"></label>
+                    <input asp-for="MemberDetails.BirthDate" type="date" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="MemberDetails.Sex" class="form-label"></label>
+                    <select asp-for="MemberDetails.Sex" class="form-select">
+                        <option value="">-- Select --</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MemberDetails.Comments" class="form-label"></label>
+                <textarea asp-for="MemberDetails.Comments" class="form-control" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Save & Continue
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
