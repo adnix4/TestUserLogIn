@@ -34,11 +34,10 @@ namespace TestUserLogIn.Pages
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Challenge(); // not logged in
+            if (user == null) return Challenge();
 
             Roles = await _userManager.GetRolesAsync(user);
 
-            // Try to load MemberInfo tied to this user
             var memberInfo = await _context.MemberInfos
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ApplicationUser.Id == user.Id);
@@ -49,7 +48,6 @@ namespace TestUserLogIn.Pages
             }
             else
             {
-                // Pre-fill basics for new record
                 MemberDetails = new MemberInfo
                 {
                     FirstName = "",
@@ -112,7 +110,8 @@ namespace TestUserLogIn.Pages
                 }
 
                 await _context.SaveChangesAsync();
-                return RedirectToPage("/Survey/Start"); // ?? Go to survey next
+
+                return RedirectToPage(); //  reload same page for now
             }
             catch (Exception ex)
             {
@@ -123,3 +122,4 @@ namespace TestUserLogIn.Pages
         }
     }
 }
+
