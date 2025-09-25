@@ -111,7 +111,7 @@ namespace TestUserLogIn.Pages
 
                 await _context.SaveChangesAsync();
 
-                return RedirectToPage(); //  reload same page for now
+                return RedirectToPage("/Members/SelectInterests"); //  redirect to SelectedIntersts
             }
             catch (Exception ex)
             {

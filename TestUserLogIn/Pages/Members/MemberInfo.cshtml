@@ -4,7 +4,7 @@
     ViewData["Title"] = "My Information";
 }
 
-<h2 class="mb-4">Welcome, @User.Identity?.Name!</h2>
+<h2 class="mb-4">Welcome, please verify or enter your profile information.</h2>
 
 @if (Model.Roles.Any())
 {
@@ -110,8 +110,9 @@
             </div>
 
             <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save"></i> Save
+                <i class="bi bi-save"></i> Select Interests
             </button>
+           
         </form>
     </div>
 </div>
