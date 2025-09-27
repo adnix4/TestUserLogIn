@@ -5,10 +5,17 @@ nav {
     background-color: #808080;
     color: white;
 }
-#introBlock {
-    background-color: #808080;
+#introBlock,
+#introBlock .card-body {
+    
+    background-color: #006101;
     color: white;
-    font-weight: 600
+    font-weight: 600;
+/*    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;*/
+   
 }
 #introBlock h4 {
     color: black;

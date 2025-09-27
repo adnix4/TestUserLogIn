@@ -15,14 +15,17 @@ namespace TestUserLogIn.Pages
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<MemberInfoModel> _logger;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public MemberInfoModel(
             UserManager<ApplicationUser> userManager,
             ApplicationDbContext context,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<MemberInfoModel> logger)
         {
             _userManager = userManager;
             _context = context;
+            _signInManager = signInManager;
             _logger = logger;
         }
 
@@ -110,6 +113,11 @@ namespace TestUserLogIn.Pages
                 }
 
                 await _context.SaveChangesAsync();
+
+                // Refresh claims so FirstName shows up in the nav bar.
+                await _signInManager.RefreshSignInAsync(user);
+
+                _logger.LogInformation("MemberInfo saved successfully for {User}", user.UserName);
 
                 return RedirectToPage("/Members/SelectInterests"); //  redirect to SelectedIntersts
             }
