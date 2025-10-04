@@ -1,6 +1,7 @@
 ﻿@page
-@model TestUserLogIn.Pages.Members.InterestsModel
+@model TestUserLogIn.Pages.Members.SelectInterestsModel
 @{
+	ViewData["Title"] = "Select Interests";
 }
 
 <h2 class="mb-4">Select the areas and Items that interest you most.</h2>
@@ -16,3 +17,36 @@
         <div class="citedVerse">&minus; Peter 4:10,11</div>
     </div>
 </div>
+
+<form method="post">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row">
+                @foreach (var interest in Model.AllInterests)
+                {
+                    <div class="col-md-6 mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="SelectedInterestIds"
+                                   value="@interest.InterestAreaID"
+                                   id="interest_@interest.InterestAreaID"
+                                   @(Model.SelectedInterestIds.Contains(interest.InterestAreaID) ? "checked" : "") />
+                            <label class="form-check-label fw-semibold" for="interest_@interest.InterestAreaID">
+                                @interest.InterestArea
+                            </label>
+                            @if (!string.IsNullOrEmpty(interest.Description))
+                            {
+                                <div class="text-muted small">@interest.Description</div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save"></i> Save My Interests
+    </button>
+</form>
