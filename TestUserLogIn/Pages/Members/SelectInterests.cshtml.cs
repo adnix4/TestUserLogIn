@@ -70,7 +70,7 @@ namespace TestUserLogIn.Pages.Members
             await _context.SaveChangesAsync();
 
             // Redirect or confirmation message
-            return RedirectToPage("/Members/MemberInfo");
+            return RedirectToPage("/Members/SelectMemberInvolvement");
         }
     }
 }
