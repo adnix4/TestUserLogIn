@@ -7,14 +7,9 @@
 <main>
     <section class="row" aria-labelledby="aspnetTitle">
         <h1 id="title">Stewardship Survey</h1>
-        <p class="lead">
-            Stewardship is about more than money. It’s our whole lives.
-            Jesus lived his life and gave his life for us. Our loving response is
-            to imitate that. We are sending out this survey to match our members'
-            abilities and interests with areas of service in the congregation. As
-            you fill out this survey contemplate God's Word'
-        </p>
-        <div class="mx-lg-5">
+        
+        <div class="card shadow-sm mb-4" id="introBlock">
+            <div class="card-body">
             <h5>
                 Serve one another, each according to the gift he has received, as good stewards of the many forms of God's grace.
                 If anyone speaks, let him do it as one speaking the messages of God. If anyone serves, let him do it as one
@@ -22,7 +17,16 @@
                 the glory and the power forever and ever. Amen.
             </h5> 
             <h5 class="citedVerse">&minus; Peter 4:10,11</h5>
+            </div>
         </div>
+
+        <p class="lead">
+            Stewardship is about more than money. It’s our whole lives.
+            Jesus lived his life and gave his life for us. Our loving response is
+            to imitate that. We are sending out this survey to match our members'
+            abilities and interests with areas of service in the congregation. As
+            you fill out this survey contemplate God's Word'
+        </p>
 
         <p class="p-5">
             <a asp-page="/Members/MemberInfo" class="btn btn-primary btn-md">Begin Survey &raquo;</a>

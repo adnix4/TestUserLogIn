@@ -1,4 +1,52 @@
 ﻿@page
-@model TestUserLogIn.Pages.Members.MemberServiceRolesModel
+@model TestUserLogIn.Pages.Members.SelectMemberServiceRolesModel
 @{
+    ViewData["Title"] = "Select Active Service Roles";
 }
+
+<h2 class="mb-4">Select the Areas You Are Currently Serving In</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<div class="card shadow-sm mb-4" id="introBlock">
+    <div class="card-body">
+        <h5>“Each of you should use whatever gift you have received to serve others.”</h5>
+        <div class="citedVerse">&minus; 1 Peter 4:10</div>
+    </div>
+</div>
+
+<form method="post">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row">
+                @foreach (var area in Model.AllInvolvements)
+                {
+                    <div class="col-md-6 mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="SelectedInvolvementIds"
+                                   value="@area.InvolvementAreaID"
+                                   id="role_@area.InvolvementAreaID"
+                                   @(Model.SelectedInvolvementIds.Contains(area.InvolvementAreaID) ? "checked" : "") />
+                            <label class="form-check-label fw-semibold" for="role_@area.InvolvementAreaID">
+                                @area.AreaOfInvolvement
+                            </label>
+                            @if (!string.IsNullOrEmpty(area.Description))
+                            {
+                                <div class="text-muted small">@area.Description</div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save"></i> Save My Service Roles
+    </button>
+</form>

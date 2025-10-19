@@ -58,7 +58,7 @@ namespace TestUserLogIn.Pages.Members
                 });
             }
             await _context.SaveChangesAsync();
-            return RedirectToPage("/Members/MemberInfo");
+            return RedirectToPage("/Members/SelectMemberServiceRoles");
         }
     }
 }
