@@ -31,7 +31,7 @@ namespace TestUserLogIn.Pages.Members
             var user = await _userManager.GetUserAsync(User);
             if (user?.MemberID != null)
             {
-                SelectedInvolvementIds = await _context.MemberInvolvements
+                SelectedInvolvementIds = await _context.MemberServiceRoles
                     .Where(mi => mi.MemberID == user.MemberID)
                     .Select(mi => mi.InvolvementAreaID)
                     .ToListAsync();

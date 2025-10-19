@@ -14,7 +14,7 @@ namespace TestUserLogIn.Data
         public DbSet<MemberInfo> MemberInfos { get; set; }
         public DbSet<InterestAreas> InterestAreas { get; set; }
         public DbSet<InvolvementAreas> InvolvementAreas { get; set; }
-        public DbSet<ServiceRoles> ServiceRoles { get; set; }
+        //public DbSet<ServiceRoles> ServiceRoles { get; set; }
         public DbSet<MemberInterest> MemberInterests { get; set; }
         public DbSet<MemberInvolvement> MemberInvolvements { get; set; }
         public DbSet<MemberServiceRole> MemberServiceRoles { get; set; }
@@ -55,16 +55,16 @@ namespace TestUserLogIn.Data
 
             // Configure composite primary key for MemberServiceRole
             modelBuilder.Entity<MemberServiceRole>()
-                .HasKey(msr => new { msr.MemberID, msr.ServiceRoleID });
+                .HasKey(msr => new { msr.MemberID, msr.InvolvementAreaID });
             // Configure relationships
             modelBuilder.Entity<MemberServiceRole>()
                 .HasOne(msr => msr.Member)
                 .WithMany(m => m.MemberServiceRoles)
                 .HasForeignKey(msr => msr.MemberID);
             modelBuilder.Entity<MemberServiceRole>()
-                .HasOne(msr => msr.ServiceRole)
-                .WithMany(sr => sr.MemberServiceRoles)
-                .HasForeignKey(msr => msr.ServiceRoleID);
+                .HasOne(msr => msr.InvolvementArea)
+                .WithMany(m => m.MemberServiceRoles)
+                .HasForeignKey(msr => msr.InvolvementAreaID);
         }
     }
 }

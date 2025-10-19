@@ -20,5 +20,7 @@ namespace TestUserLogIn.Models
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public ICollection<MemberInvolvement>? MemberInvolvements { get; set; }
+
+        public ICollection<MemberServiceRole>? MemberServiceRoles { get; set; }
     }
 }
