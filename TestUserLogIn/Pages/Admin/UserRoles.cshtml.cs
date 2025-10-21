@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TestUserLogIn.Data;
+using TestUserLogIn.Models;
+
 
 namespace TestUserLogIn.Pages.Admin 
 {
@@ -23,7 +26,10 @@ namespace TestUserLogIn.Pages.Admin
         public async Task OnGetAsync()
         {
             UsersWithRoles = new List<UserRoleViewModel>();
-            var users = _userManager.Users.ToList();
+            var users =  await _userManager.Users
+                .Include(u => u.Member) 
+                .ToListAsync();
+
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
@@ -31,15 +37,18 @@ namespace TestUserLogIn.Pages.Admin
                 {
                     UserId = user.Id,
                     Email = user.Email,
+                    FirstName = user.Member?.FirstName ?? "No first name",
+                    LastName = user.Member?.LastName ?? "No last name",
                     Roles = roles.ToList()
                 });
-            }
-            return;
+            }           
         }
         public class UserRoleViewModel
         {
             public string UserId { get; set; }
             public string Email { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
             public List<string> Roles { get; set; } = new List<string>();
         }
               

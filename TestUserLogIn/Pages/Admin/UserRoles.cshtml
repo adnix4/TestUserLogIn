@@ -4,7 +4,7 @@
     ViewData["Title"] = "User Roles";
 }
 
-<h2 class="mb-4">Member Role Management</h2>
+<h2 class="mb-4">Member Permission Management</h2>
 
 <div class="card shadow-sm mb-4">
     <div class="card-body">
@@ -12,7 +12,8 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th style="width: 40%">Email</th>
+                    <th style="width: 20%">Name</th>
+                    <th style="width: 20%">Email</th>
                     <th style="width: 40%">Roles</th>
                     <th style="width: 20%" class="text-center">Actions</th>
                 </tr>
@@ -29,6 +30,7 @@
                     @foreach (var user in Model.UsersWithRoles)
                     {
                         <tr>
+                            <td>@($"{user.FirstName} {user.LastName}")</td>
                             <td>@user.Email</td>
                             <td>
                                 <ul class="mb-0 ps-3">
@@ -40,7 +42,7 @@
                             </td>
                             <td class="text-center">
                                 <a asp-page="/Admin/EditUserRoles" asp-route-id="@user.UserId" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil-square"></i> Edit Roles
+                                    <i class="bi bi-pencil-square"></i> Edit Permissions
                                 </a>
                             </td>
                         </tr>
