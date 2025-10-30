@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestUserLogIn.Data;
 
@@ -11,9 +12,11 @@ using TestUserLogIn.Data;
 namespace TestUserLogIn.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029225626_AddPreferredContactFields")]
+    partial class AddPreferredContactFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,18 +338,6 @@ namespace TestUserLogIn.Data.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PreferredContactEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PrefersEmail")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PrefersPhone")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PrefersText")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Sex")
                         .HasColumnType("nvarchar(max)");

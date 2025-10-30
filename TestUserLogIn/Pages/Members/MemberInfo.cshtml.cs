@@ -39,8 +39,10 @@ namespace TestUserLogIn.Pages
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
 
+            // Load user roles
             Roles = await _userManager.GetRolesAsync(user);
 
+            // Load existing MemberInfo if it exists
             var memberInfo = await _context.MemberInfos
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ApplicationUser.Id == user.Id);
@@ -51,10 +53,12 @@ namespace TestUserLogIn.Pages
             }
             else
             {
-                MemberDetails = new MemberInfo
+                MemberDetails = await _context.MemberInfos
+                    .FirstOrDefaultAsync(m => m.MemberID == user.MemberID) ?? new MemberInfo
                 {
                     FirstName = "",
                     LastName = "",
+                    Email = user.Email,
                     ApplicationUser = user,
                     CreatedDate = DateTime.UtcNow,
                     IsActive = true
@@ -100,12 +104,15 @@ namespace TestUserLogIn.Pages
                     existing.State = MemberDetails.State;
                     existing.Zip = MemberDetails.Zip;
                     existing.CellPhoneNumber = MemberDetails.CellPhoneNumber;
-                    existing.HomePhoneNumber = MemberDetails.HomePhoneNumber;
-                    existing.WorkPhoneNumber = MemberDetails.WorkPhoneNumber;
+                    existing.HomePhoneNumber = MemberDetails.HomePhoneNumber;                    
                     existing.Email = MemberDetails.Email;
+                    existing.PreferredContactEmail = MemberDetails.PreferredContactEmail;
                     existing.BirthDate = MemberDetails.BirthDate;
                     existing.Sex = MemberDetails.Sex;
                     existing.Comments = MemberDetails.Comments;
+                    existing.PrefersPhone = MemberDetails.PrefersPhone;
+                    existing.PrefersEmail = MemberDetails.PrefersEmail;
+                    existing.PrefersText = MemberDetails.PrefersText;
                     existing.UpdatedDate = DateTime.UtcNow;
 
                     _context.MemberInfos.Update(existing);
